@@ -18,11 +18,12 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.googlemapstrial.databinding.ActivityMapsBinding;
 import com.google.android.material.snackbar.Snackbar;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener {
 
     private GoogleMap map;
     private ActivityMapsBinding binding;
@@ -63,7 +64,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Add a marker in Sydney and move the camera
         LatLng dhaka = new LatLng(23.814861037613515, 90.4097105684943);
-        map.addMarker(new MarkerOptions().position(dhaka).title("Marker in Dhaka"));
+        Marker dhakaMarker =   map.addMarker(new MarkerOptions().position(dhaka).title("Marker in Dhaka"));
+        dhakaMarker.setDraggable(true);
+
         map.moveCamera(CameraUpdateFactory.newLatLng(dhaka));
         new Thread(()-> {
             try {
@@ -90,8 +93,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         map.getUiSettings().setZoomControlsEnabled(true);
         onClickEventMap();
         onLongClickMap();
-
-
+        map.setOnMarkerDragListener(this);
     }
 
     private void onLongClickMap() {
@@ -112,4 +114,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
     }
+
+    @Override
+    public void onMarkerDragStart( Marker marker) {
+        Toast.makeText(getApplicationContext(),"Start..",Toast.LENGTH_SHORT).show();
+    }
+    @Override
+    public void onMarkerDrag(Marker marker) {
+        Toast.makeText(getApplicationContext(),"Dragging..",Toast.LENGTH_SHORT).show();
+    }
+    @Override
+    public void onMarkerDragEnd(Marker marker) {
+        Toast.makeText(getApplicationContext(),"Stop",Toast.LENGTH_SHORT).show();
+    }
+
+
 }
