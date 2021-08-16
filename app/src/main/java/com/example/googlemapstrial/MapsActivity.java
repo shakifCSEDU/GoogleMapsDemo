@@ -93,7 +93,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         map.getUiSettings().setZoomControlsEnabled(true);
         onClickEventMap();
         onLongClickMap();
-        map.setOnMarkerDragListener(this);
+        //map.setOnMarkerDragListener(this);
+        map.setInfoWindowAdapter(new CustomAdapter(this));
+
+
     }
 
     private void onLongClickMap() {
