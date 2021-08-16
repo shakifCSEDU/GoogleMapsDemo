@@ -26,6 +26,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap map;
     private ActivityMapsBinding binding;
     private Toolbar toolbar;
+    private TypeAndStyle typeAndStyle = new TypeAndStyle(this);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,33 +52,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == R.id.normal_mapId){
-            map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        }
-        else if(item.getItemId() == R.id.hybrid_mapId){
-            map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        }
-        else if(item.getItemId() == R.id.terrain_mapId){
-            map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-        }
-        else if(item.getItemId() == R.id.satellite_mapId){
-            map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-        }
-        else if(item.getItemId() == R.id.none_mapId){
-            map.setMapType(GoogleMap.MAP_TYPE_NONE);
-        }
-        else if(item.getItemId()==R.id.custom_mapId){
-          try{
-            boolean success =map.setMapStyle(MapStyleOptions.loadRawResourceStyle(this,R.raw.style));
-            if(!success)
-                Toast.makeText(getApplicationContext(),"Not found !!",Toast.LENGTH_SHORT).show();
-            else
-                Toast.makeText(getApplicationContext(),"Found !",Toast.LENGTH_SHORT).show();
-          }catch (Resources.NotFoundException e){
-                Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
-          }
-        }
-
+        typeAndStyle.setStyle(item,map);
         return super.onOptionsItemSelected(item);
     }
 
@@ -87,13 +63,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Add a marker in Sydney and move the camera
         LatLng dhaka = new LatLng(23.814861037613515, 90.4097105684943);
         map.addMarker(new MarkerOptions().position(dhaka).title("Marker in Dhaka"));
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(dhaka,15f));
+        map.moveCamera(CameraUpdateFactory.newLatLng(dhaka));
+        new Thread(()-> {
+            try {
+                Thread.sleep(4000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            runOnUiThread(() -> {
+                map.animateCamera(CameraUpdateFactory.newCameraPosition(typeAndStyle.cameraAndViewPort(dhaka)));
+
+            });
+        }).start();
 
         map.getUiSettings().setZoomGesturesEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
-
-
-
 
     }
 }
