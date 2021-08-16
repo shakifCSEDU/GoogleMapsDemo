@@ -5,16 +5,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentActivity;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.googlemapstrial.databinding.ActivityMapsBinding;
 
@@ -61,6 +64,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         else if(item.getItemId() == R.id.none_mapId){
             map.setMapType(GoogleMap.MAP_TYPE_NONE);
+        }
+        else if(item.getItemId()==R.id.custom_mapId){
+          try{
+            boolean success =map.setMapStyle(MapStyleOptions.loadRawResourceStyle(this,R.raw.style));
+            if(!success)
+                Toast.makeText(getApplicationContext(),"Not found !!",Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(getApplicationContext(),"Found !",Toast.LENGTH_SHORT).show();
+          }catch (Resources.NotFoundException e){
+                Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
+          }
         }
 
         return super.onOptionsItemSelected(item);

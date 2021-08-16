@@ -26,4 +26,10 @@
     android:title="@string/none"
     android:id="@+id/none_mapId"
     app:showAsAction="never"/>
+
+<item
+    android:title="@string/custom"
+    android:id="@+id/custom_mapId"
+    app:showAsAction="never"
+    />
 </menu>
