@@ -7,4 +7,5 @@
     <string name="terrain">Terrain</string>
     <string name="none">None</string>
     <string name="custom">Custom</string>
+    <string name="click">Long Clicked..</string>
 </resources>

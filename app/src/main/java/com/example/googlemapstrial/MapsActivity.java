@@ -20,6 +20,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.googlemapstrial.databinding.ActivityMapsBinding;
+import com.google.android.material.snackbar.Snackbar;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -71,13 +72,44 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 e.printStackTrace();
             }
             runOnUiThread(() -> {
-                map.animateCamera(CameraUpdateFactory.newCameraPosition(typeAndStyle.cameraAndViewPort(dhaka)));
+                map.animateCamera(CameraUpdateFactory.newCameraPosition(typeAndStyle.cameraAndViewPort(dhaka)), 1000, new GoogleMap.CancelableCallback() {
+                    @Override
+                    public void onFinish() {
+                        Toast.makeText(getApplicationContext(),"Finish",Toast.LENGTH_SHORT).show();
+                    }
+                    @Override
+                    public void onCancel() {
+                        Toast.makeText(getApplicationContext(),"Cancle Animation",Toast.LENGTH_SHORT).show();
+                    }
+                });
 
             });
         }).start();
 
         map.getUiSettings().setZoomGesturesEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
+        onClickEventMap();
+        onLongClickMap();
 
+
+    }
+
+    private void onLongClickMap() {
+        map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                Snackbar.make(findViewById(R.id.linear_layoutId),getString(R.string.click),Snackbar.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void onClickEventMap() {
+        map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                Toast.makeText(getApplicationContext(),"Your click Location -> LON :"+latLng.longitude+"\nLAT"+latLng.latitude,Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
